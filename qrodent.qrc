@@ -1,0 +1,19 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource>
+    <file>images/new.png</file>
+    <file>images/scores.png</file>
+    <file>images/prefs.png</file>
+    
+    <file>images/empty_block.svg</file>
+    <file>images/movable_block.svg</file>
+    <file>images/hole_block.svg</file>
+    <file>images/yarn_block.svg</file>
+    <file>images/cat_block.svg</file>
+    <file>images/mouse_block.svg</file>
+    <file>images/solid_block.svg</file>
+    <file>images/trap_block.svg</file>
+    <file>images/cheese_block.svg</file>
+    <file>images/frozen_cat_block.svg</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,24 @@
+This is a cross-platform Rodent's Revenge clone, by Jeremiah LaRocco.
+
+
+Building from source requires QT 4.0 or above
+Playing the game requires the QT library
+
+
+To get the code:
+
+   svn co http://jlarocco.com/rodent/trunk/ rodent
+
+To build:
+
+   cd rodent
+   qmake -project
+   qmake
+   make
+
+To play the game:
+
+   ./rodent
+
+To submit a code change:
+   Send a patch to rodent@jlarocco.com

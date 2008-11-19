@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  yarn_block.svg
+ 
+  Copyright (C) 2008 Jeremiah LaRocco
+
+  This file is part of QRodent
+
+  QRodent is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  QRodent is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with QRodent.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="64"
+   height="64"
+   id="svg6302">
+  <defs
+     id="defs6304" />
+  <g
+     id="layer1">
+    <path
+       d="M 21.09091,19.636364 C 21.322286,21.445451 18.76645,20.840795 18.084088,20.020927 C 16.234931,17.799136 18.08701,14.66221 20.321784,13.62272 C 24.319272,11.763317 28.759963,14.616984 30.111376,18.482675 C 32.094628,24.155732 28.1263,30.052901 22.629162,31.663651 C 15.302341,33.810529 7.9068057,28.689786 6.0568007,21.559179 C 3.7287581,12.586037 10.018046,3.6747747 18.783532,1.5954328 C 29.399711,-0.92292878 39.83564,6.5431747 42.138663,16.944424 C 44.852696,29.201935 36.204991,41.167771 24.167413,43.690939 C 10.269554,46.604036 -3.229535,36.771713 -5.9704868,23.09743 C -9.0849303,7.559841 1.9340321,-7.4747734 17.245281,-10.431855 C 34.422188,-13.749253 50.993944,-1.5422295 54.16595,15.406172 C 57.687478,34.22211 44.291357,52.332199 25.705665,55.718226 C 5.250904,59.444769 -14.398423,44.858768 -17.997774,24.635682 C -21.930013,2.5422532 -6.1535322,-18.647014 15.707029,-22.459142 C 39.439007,-26.597615 62.16877,-9.6301795 66.193238,13.86792 C 70.538376,39.238354 52.379606,63.509063 27.243917,67.745514 C 25.600014,68.022582 23.941834,68.214749 22.278161,68.321349"
+       transform="matrix(0.7407024,0,0,0.6923567,14.135471,16.3392)"
+       id="path6312"
+       style="fill:none;fill-rule:evenodd;stroke:#800080;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 63.838341,31.913055 A 32.086945,31.91917 0 1 1 -0.3355484,31.913055 A 32.086945,31.91917 0 1 1 63.838341,31.913055 z"
+       transform="matrix(0.9819488,0,0,0.9871101,0.8217544,0.4982981)"
+       id="path6315"
+       style="opacity:0.92000002;fill:#ff00ff;fill-opacity:0.22108842;stroke:none;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

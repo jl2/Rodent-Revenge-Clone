@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  empty_block.svg
+ 
+  Copyright (C) 2008 Jeremiah LaRocco
+
+  This file is part of QRodent
+
+  QRodent is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  QRodent is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with QRodent.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="64"
+   height="64"
+   id="svg5157">
+  <defs
+     id="defs5159" />
+  <g
+     id="layer1">
+    <rect
+       width="64"
+       height="64"
+       x="0"
+       y="0"
+       id="rect5167"
+       style="opacity:0.92000002;fill:#20c048;fill-opacity:1;stroke:#ffff00;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>

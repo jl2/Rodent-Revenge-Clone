@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  trap_block.svg
+ 
+  Copyright (C) 2008 Jeremiah LaRocco
+
+  This file is part of QRodent
+
+  QRodent is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  QRodent is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with QRodent.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   version="1.0"
+   width="64"
+   height="64"
+   id="svg5698">
+  <defs
+     id="defs5700" />
+  <g
+     id="layer1">
+    <rect
+       width="26.727272"
+       height="48.181816"
+       x="29.532997"
+       y="-26.35338"
+       transform="matrix(0.6886635,0.7250811,-0.7250811,0.6886635,0,0)"
+       id="use6266"
+       style="opacity:0.92000002;fill:#ffff00;fill-opacity:1;stroke:#ffff00;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       width="15.303307"
+       height="17.848761"
+       x="35.156567"
+       y="-4.4631615"
+       transform="matrix(0.6892377,0.7245353,-0.7245353,0.6892377,0,0)"
+       id="rect5743"
+       style="opacity:0.92000002;fill:#ffff00;fill-opacity:0;stroke:#000000;stroke-width:0.78760278;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       width="7.8866596"
+       height="9.2208538"
+       x="39.330585"
+       y="-9.5924788"
+       transform="matrix(0.7066775,0.7075358,-0.7410654,0.6714329,0,0)"
+       id="rect6254"
+       style="opacity:0.92000002;fill:#ffff00;fill-opacity:0;stroke:#000000;stroke-width:0.40638971;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="M 27.818182,32.909091 C 26.890409,32.673026 25.875696,33.397032 25.272727,34 C 24.489339,34.783389 24.965985,35.153371 24,35.636364 C 23.332371,35.970178 22.790781,36.300128 22.363636,36.727273 C 22.051635,37.039274 20.830084,37.519752 20.363636,37.636364 C 20.120124,37.697242 18.894259,37.090909 18.181818,37.090909 C 16.983905,37.090909 17.149555,37.583599 16.909091,38.545455 C 16.82051,38.899779 17.185535,40.560321 17.272727,40.909091 C 17.415064,41.478436 17.325211,41.066541 17.454545,41.454545"
+       id="path6256"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    <path
+       d="M 31.272727,29.454545 C 31.523044,30.455814 33.174802,28.377669 33.636364,27.454545 C 33.915524,26.896224 35.433926,26.384256 35.818182,26 C 36.33911,25.479072 36.891386,25.190671 37.454545,24.909091"
+       id="path6258"
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+  </g>
+</svg>

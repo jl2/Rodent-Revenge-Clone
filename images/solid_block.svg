@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  empty_block.svg
+ 
+  Copyright (C) 2008 Jeremiah LaRocco
+
+  This file is part of QRodent
+
+  QRodent is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  (at your option) any later version.
+
+  QRodent is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with QRodent.  If not, see <http://www.gnu.org/licenses/>.
+-->
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   width="64"
+   height="64"
+   id="svg2383">
+  <defs
+     id="defs2385" />
+  <g
+     id="layer1">
+    <rect
+       width="64"
+       height="64"
+       x="0"
+       y="2.3869795e-15"
+       id="rect4524"
+       style="opacity:0.92000002;fill:#00ffff;fill-opacity:0.55102036;stroke:#1a1aaf;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <rect
+       width="48"
+       height="48"
+       x="8"
+       y="8"
+       id="rect4526"
+       style="opacity:0.92000002;fill:#0000ff;fill-opacity:0.55102036;stroke:#e9afaf;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <path
+       d="M 36.087393,33.747898 A 2.4201682,2.662185 0 1 1 31.247057,33.747898 A 2.4201682,2.662185 0 1 1 36.087393,33.747898 z"
+       transform="matrix(0.8263889,0,0,0.7512626,4.1777805,6.6464662)"
+       id="path4536"
+       style="opacity:0.92000002;fill:#d40000;fill-opacity:0.55102036;stroke:#2b0000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <g
+     id="layer2" />
+</svg>
