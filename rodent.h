@@ -22,7 +22,9 @@
 #ifndef RODENT_H
 #define RODENT_H
 
-#include <vector>
+#include <utility>
+#include <list>
+
 enum rblock_t {empty, movable, hole, yarn, cat, mouse, solid, trap, cheese, frozen_cat, last_block};
   
 enum direction_t {north, south, east, west,
@@ -32,32 +34,73 @@ class Rodent {
  public:
   Rodent(unsigned level = 1);
 
-  void gotoLevel(unsigned level);
+  // Change to specified level
+  void newGame(unsigned level = 1);
+
+  // Accessor methods
   unsigned level() { return cur_level; }
   unsigned width() { return board_size; }
   unsigned height() { return board_size; }
-  size_t xpos() { return curXPos; }
-  size_t ypos() { return curYPos; }
+  unsigned score() { return points; }
+  unsigned lives() { return livesLeft; }
+  unsigned xpos() { return curXPos; }
+  unsigned ypos() { return curYPos; }
 
+  // Move the mouse in direction dir
   unsigned move(direction_t dir);
-  bool canMove(unsigned x, unsigned y, direction_t dir);
-  unsigned doMove(unsigned x, unsigned y, direction_t dir);
+
+  // Reset hasChanged array
   void resetChanged();
-  bool blockChanged(size_t x, size_t y) const;
-  rblock_t blockAt(size_t x, size_t y) const;
+
+  // Whether block at (x,y) has been modified since last reset
+  bool blockChanged(unsigned x, unsigned y) const;
+  
+  // Returns information about curBoard
+  rblock_t blockAt(unsigned x, unsigned y) const;
+
+  // Updates game state a few times per second
+  bool update();
   
  private:
-  void setBlockAt(size_t x, size_t y, rblock_t b);
-  void genLevel();
+  // Returns validity of moving block at (x,y) in direction dir
+  bool canMove(unsigned x, unsigned y, direction_t dir);
   
+  // Moves the block at (x,y) in direction dir
+  unsigned doMove(unsigned x, unsigned y, direction_t dir);
+
+  // Modifies the curBoard array
+  void setBlockAt(unsigned x, unsigned y, rblock_t b);
+
+  // Generate a level
+  void genLevel();
+
+  // Converts a direction into an x and y offset for movement
+  void getOffset(direction_t dir, int &xoff, int &yoff);
+
+  // Will always be 23
   const unsigned board_size;
+
+  // Current board layout
   rblock_t curBoard[23][23];
+
+  // Whether a block has changed or not
   bool hasChanged[23][23];
+
+  // Current level
   unsigned cur_level;
-  size_t curXPos;
-  size_t curYPos;
+
+  // Current location of the "mouse"
+  unsigned curXPos;
+  unsigned curYPos;
+
+  // Score
   unsigned points;
+
+  // Remaining lives
   unsigned livesLeft;
+
+  // List of (x,y) positions of the cats.
+  std::list< std::pair<unsigned, unsigned> > the_cats;
 };
 
 #endif

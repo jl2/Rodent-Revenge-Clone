@@ -22,6 +22,9 @@
 #include <QApplication>
 #include "qrodent.h"
 
+/*!
+  Start the game running.
+*/
 int main(int argc, char *argv[]) {
   QApplication app(argc, argv);
 

@@ -32,20 +32,30 @@ class QRodent : public QWidget {
 
  public:
   QRodent(QWidget *parent = 0);
+
   void paintEvent(QPaintEvent *event);
   void keyReleaseEvent(QKeyEvent *event);
   void resizeEvent(QResizeEvent *event);
   
  private:
+  // Cache of unsized original tile images
   QPixmap cached_tiles[last_block];
+  
+  // The tile images currently being used
   QPixmap tiles[last_block];
-  void resizeImage(unsigned w, unsigned h, QPixmap *res, QPixmap *img);
+
+  // Load images from disk  
   void loadImages();
+
+  // Update tile image sizes
   void resizeImages();
+
+  // The actual game instance
   Rodent rg;
 
-  unsigned bh;
+  // Width and height of tiles
   unsigned bw;
+  unsigned bh;
 };
 
 #endif

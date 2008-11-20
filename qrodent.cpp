@@ -24,9 +24,15 @@
 #include "qrodent.h"
 #include <algorithm>
 
+/*!
+  Empty constructor just calls super class' constructor.
+*/
 QRodent::QRodent(QWidget *parent) : QWidget(parent) {
 }
 
+/*!
+  Update the screen.
+*/
 void QRodent::paintEvent(QPaintEvent *event) {
   QPainter painter(this);
   
@@ -58,6 +64,10 @@ void QRodent::paintEvent(QPaintEvent *event) {
   }
 }
 
+/*!
+  Handle key presses.
+  Only the direction keys matter
+*/
 void QRodent::keyReleaseEvent(QKeyEvent *event) {
   direction_t md;
   bool canMove = false;
@@ -89,6 +99,10 @@ void QRodent::keyReleaseEvent(QKeyEvent *event) {
   
 }
 
+/*!
+  Resize the game window.
+  Makes sure the window is an even multiple of the block size.
+*/
 void QRodent::resizeEvent(QResizeEvent *event) {
   bh = event->size().height()/rg.height();
   bw = event->size().width()/rg.width();
@@ -104,9 +118,9 @@ void QRodent::resizeEvent(QResizeEvent *event) {
   }
 }
 
-void QRodent::resizeImage(unsigned w, unsigned h, QPixmap *res, QPixmap *img) {
-  *res=img->scaled(w,h,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
-}
+/*!
+  Read images from disk.
+*/
 void QRodent::loadImages() {
   cached_tiles[empty].load(":/images/empty_block.svg");
   cached_tiles[movable].load(":/images/movable_block.svg");
@@ -135,8 +149,11 @@ void QRodent::loadImages() {
   }
 }
 
+/*!
+  Update all tile images to the size (bw x bh)
+*/
 void QRodent::resizeImages() {
   for (unsigned img = empty; img<last_block; ++img) {
-    resizeImage(bw,bh,&tiles[img],&cached_tiles[img]);
+    tiles[img]=cached_tiles[img].scaled(bw,bh,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
   }
 }

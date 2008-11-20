@@ -21,7 +21,11 @@
 
 #include "rodent.h"
 
-Rodent::Rodent(unsigned level) :board_size(23),
+
+/*!
+  Initialize a new game.
+*/
+Rodent::Rodent(unsigned level) : board_size(23),
 				     cur_level(level),
 				     curXPos(board_size/2),
 				     curYPos(board_size/2),
@@ -30,57 +34,54 @@ Rodent::Rodent(unsigned level) :board_size(23),
   genLevel();
 }
 
-void Rodent::gotoLevel(unsigned level) {
+/*!
+  Jumpt to the specified level.
+*/
+void Rodent::newGame(unsigned level) {
   cur_level = level;
   genLevel();
 }
 
+/*!
+  Converts a direction_t into x and y offsets for movement.
+*/
+inline void Rodent::getOffset(direction_t dir, int &xoff, int &yoff) {
+  static int xoffsets[] = { 0,0,1,-1,-1, 1,-1,1};
+  static int yoffsets[] = {-1,1,0, 0,-1,-1, 1,1};
+  xoff = xoffsets[dir];
+  yoff = yoffsets[dir];
+}
+
+/*!
+  Moves the player in the specified direction.
+  Returns the number of blocks moved.
+*/
 unsigned Rodent::move(direction_t dir) {
   int xoff = 0;
   int yoff = 0;
   unsigned rv = 0;
   
-  switch (dir) {
-  case north: yoff = -1; break;
-  case south: yoff =  1; break;
-  case east:  xoff =  1; break;
-  case west:  xoff = -1; break;
-  case nw:    xoff = -1; yoff = -1; break;
-  case se:    xoff =  1; yoff = 1; break;
-  case ne:    xoff =  1; yoff = -1; break;
-  case sw:    xoff = -1; yoff = 1; break;
-
-  default:    xoff = yoff = 0;
-  }
+  getOffset(dir, xoff, yoff);
   
   if (canMove(curXPos, curYPos, dir)) {
     rv = doMove(curXPos, curYPos, dir);
-    //    std::cout << "doMove() returned " << rv << "\n";
     curXPos += xoff;
     curYPos += yoff;
   }
   return rv;
 }
 
+/*!
+  Moves the block at (x,y) in the specified direction.
+  Returns the number of blocks moved.
+*/
 unsigned Rodent::doMove(unsigned x, unsigned y, direction_t dir) {
 
   int xoff = 0;
   int yoff = 0;
   unsigned retVal = 0;
-  
-  switch (dir) {
-  case north: yoff = -1; break;
-  case south: yoff =  1; break;
-  case east:  xoff =  1; break;
-  case west:  xoff = -1; break;
-  case nw:    xoff = -1; yoff = -1; break;
-  case se:    xoff =  1; yoff = 1; break;
-  case ne:    xoff =  1; yoff = -1; break;
-  case sw:    xoff = -1; yoff = 1; break;
-  default:    xoff = yoff = 0;
-  }
-//   std::cout << x << " " << y << " "
-// 	    << xoff << " " << yoff << "\n";
+  getOffset(dir, xoff, yoff);
+
   switch (blockAt(x+xoff,y+yoff)) {
   case movable:
       retVal += doMove(x+xoff, y+yoff, dir);
@@ -95,21 +96,15 @@ unsigned Rodent::doMove(unsigned x, unsigned y, direction_t dir) {
   }
 }
 
+/*!
+  Check whether the block at (x,y) can move in direction dir.
+  Returns true if the block can move.
+*/
 bool Rodent::canMove(unsigned x, unsigned y, direction_t dir) {
   int xoff = 0;
   int yoff = 0;
-  
-  switch (dir) {
-  case north: yoff = -1; break;
-  case south: yoff =  1; break;
-  case east:  xoff =  1; break;
-  case west:  xoff = -1; break;
-  case nw:    xoff = -1; yoff = -1; break;
-  case se:    xoff =  1; yoff = 1; break;
-  case ne:    xoff =  1; yoff = -1; break;
-  case sw:    xoff = -1; yoff = 1; break;
-  default:    xoff = yoff = 0;
-  }
+
+  getOffset(dir, xoff, yoff);
   
   switch (blockAt(x+xoff, y+yoff)) {
   case empty:
@@ -124,14 +119,28 @@ bool Rodent::canMove(unsigned x, unsigned y, direction_t dir) {
   
 }
 
-rblock_t Rodent::blockAt(size_t x, size_t y) const {
+/*!
+  Returns the block type at (x,y)
+  For consistency, this should be the only place where
+  the curBoard array is accessed.
+*/
+rblock_t Rodent::blockAt(unsigned x, unsigned y) const {
   return curBoard[y][x];
 }
 
-bool Rodent::blockChanged(size_t x, size_t y) const {
+/*!
+  Returns whether or not the block at (x,y) has been modified since
+  the last reset.
+  This was added primarily to "optimize" drawing by avoiding updates to
+  blocks that have not been changed recently.
+*/
+bool Rodent::blockChanged(unsigned x, unsigned y) const {
   return hasChanged[y][x];
 }
 
+/*!
+  Resets the hasChanged matrix, after a redraw, for example.
+*/
 void Rodent::resetChanged() {
   for (size_t x = 0; x<board_size;++x) {
     for (size_t y = 0; y<board_size;++y) {
@@ -140,14 +149,23 @@ void Rodent::resetChanged() {
   }
 }
 
-inline void Rodent::setBlockAt(size_t x, size_t y, rblock_t b) {
+/*!
+  Sets the block at (x,y) to type b.
+  For consistency, this should be the only place where curBoard
+  is modified.
+*/
+inline void Rodent::setBlockAt(unsigned x, unsigned y, rblock_t b) {
   curBoard[y][x] = b;
   hasChanged[y][x] = true;
 }
 
+/*!
+  Generates a new board layout based on the cur_level variable.
+  TODO: Generate an actual level, not a "test" level.
+*/
 void Rodent::genLevel() {
-  size_t i = 0;
-  size_t j = 0;
+  unsigned i = 0;
+  unsigned j = 0;
   
   for (i=0;i<board_size;++i) {
     for (j=0;j<board_size;++j) {
@@ -171,10 +189,19 @@ void Rodent::genLevel() {
     }
   }
   for (unsigned img = empty; img<last_block; ++img) {
-    setBlockAt(1,img, rblock_t(img));
+    setBlockAt(1,img+1, rblock_t(img));
   }
 
   curXPos = curYPos = board_size/2;
   
   setBlockAt(curXPos, curYPos, mouse);
+}
+
+/*!
+  Performs an update of the game state a few times a second.
+  This is primarily for updating cat movement/location, but also
+  handles stuff like advancing the score.
+*/
+bool Rodent::update() {
+  return false;
 }
