@@ -28,7 +28,13 @@
 enum rblock_t {empty, movable, hole, yarn, cat, mouse, solid, trap, cheese, frozen_cat, last_block};
   
 enum direction_t {north, south, east, west,
-		  nw, ne, sw, se};
+		  nw, ne, sw, se, last_dir};
+enum game_state_t {not_started, game_over};
+enum cat_move_t {cat_moved, killed_mouse, frozen};
+  
+typedef std::list< std::pair<unsigned, unsigned> > cat_list;
+
+typedef std::list< std::pair<unsigned, unsigned> > changed_list;
 
 class Rodent {
  public:
@@ -60,6 +66,9 @@ class Rodent {
 
   // Updates game state a few times per second
   bool update();
+
+  changed_list::iterator changedBegin();
+  changed_list::iterator changedEnd();
   
  private:
   // Returns validity of moving block at (x,y) in direction dir
@@ -70,7 +79,8 @@ class Rodent {
 
   // Modifies the curBoard array
   void setBlockAt(unsigned x, unsigned y, rblock_t b);
-
+  cat_move_t moveCat(unsigned &x, unsigned &y);
+  
   // Generate a level
   void genLevel();
 
@@ -82,9 +92,6 @@ class Rodent {
 
   // Current board layout
   rblock_t curBoard[23][23];
-
-  // Whether a block has changed or not
-  bool hasChanged[23][23];
 
   // Current level
   unsigned cur_level;
@@ -100,7 +107,9 @@ class Rodent {
   unsigned livesLeft;
 
   // List of (x,y) positions of the cats.
-  std::list< std::pair<unsigned, unsigned> > the_cats;
+  cat_list the_cats;
+
+  changed_list recent_changes;
 };
 
 #endif

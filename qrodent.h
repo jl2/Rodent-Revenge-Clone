@@ -33,9 +33,11 @@ class QRodent : public QWidget {
  public:
   QRodent(QWidget *parent = 0);
 
+ protected:
   void paintEvent(QPaintEvent *event);
   void keyReleaseEvent(QKeyEvent *event);
   void resizeEvent(QResizeEvent *event);
+  void timerEvent(QTimerEvent *event);
   
  private:
   // Cache of unsized original tile images
@@ -56,6 +58,11 @@ class QRodent : public QWidget {
   // Width and height of tiles
   unsigned bw;
   unsigned bh;
+  bool gameStarted;
+
+  unsigned gameSpeed;
+  int timerId;
+  bool redrawAll;
 };
 
 #endif

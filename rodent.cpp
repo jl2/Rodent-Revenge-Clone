@@ -19,6 +19,12 @@
   along with QRodent.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <utility>
+#include <iostream>
+
+#include <cstdlib>
+#include <ctime>
+
 #include "rodent.h"
 
 
@@ -31,6 +37,7 @@ Rodent::Rodent(unsigned level) : board_size(23),
 				     curYPos(board_size/2),
 				     points(0),
 				     livesLeft(2) {
+  std::srand(std::time(0));
   genLevel();
 }
 
@@ -95,6 +102,47 @@ unsigned Rodent::doMove(unsigned x, unsigned y, direction_t dir) {
     return retVal;
   }
 }
+/*!
+  Moves the block at (x,y) in the specified direction.
+  Returns the number of blocks moved.
+*/
+cat_move_t Rodent::moveCat(unsigned &x, unsigned &y) {
+
+  unsigned moves = 0;
+  bool found_mouse = false;
+  int xoff = 0;
+  int yoff = 0;
+  
+  for (int i=-1;i<=1;++i) {
+    for (int j=-1;j<=1;++j) {
+      if (blockAt(x+i,y+j) == mouse) {
+	found_mouse = true;
+	xoff = i;
+	yoff = j;
+	setBlockAt(x+xoff, y+yoff, blockAt(x, y));
+	setBlockAt(x, y, empty);
+	x += xoff;
+	y += yoff;
+	return killed_mouse;
+      }
+      if (blockAt(x+i,y+j) == empty)
+	moves++;
+    }
+  }
+  if (moves == 0) return frozen;
+  
+
+  direction_t dir;
+  do {
+    dir = direction_t(std::rand()%last_dir);
+    getOffset(dir, xoff, yoff);
+  } while (blockAt(x+xoff,y+yoff) != empty);
+  setBlockAt(x+xoff, y+yoff, blockAt(x, y));
+  setBlockAt(x, y, empty);
+  x += xoff;
+  y += yoff;
+  return cat_moved;
+}
 
 /*!
   Check whether the block at (x,y) can move in direction dir.
@@ -129,24 +177,10 @@ rblock_t Rodent::blockAt(unsigned x, unsigned y) const {
 }
 
 /*!
-  Returns whether or not the block at (x,y) has been modified since
-  the last reset.
-  This was added primarily to "optimize" drawing by avoiding updates to
-  blocks that have not been changed recently.
-*/
-bool Rodent::blockChanged(unsigned x, unsigned y) const {
-  return hasChanged[y][x];
-}
-
-/*!
-  Resets the hasChanged matrix, after a redraw, for example.
+  Resets the reset_changes list, after a redraw, for example.
 */
 void Rodent::resetChanged() {
-  for (size_t x = 0; x<board_size;++x) {
-    for (size_t y = 0; y<board_size;++y) {
-      hasChanged[y][x] = false;
-    }
-  }
+  recent_changes.clear();
 }
 
 /*!
@@ -156,7 +190,7 @@ void Rodent::resetChanged() {
 */
 inline void Rodent::setBlockAt(unsigned x, unsigned y, rblock_t b) {
   curBoard[y][x] = b;
-  hasChanged[y][x] = true;
+  recent_changes.push_back(std::make_pair(x,y));
 }
 
 /*!
@@ -188,13 +222,25 @@ void Rodent::genLevel() {
       setBlockAt(i,j,movable);
     }
   }
-  for (unsigned img = empty; img<last_block; ++img) {
-    setBlockAt(1,img+1, rblock_t(img));
-  }
+//   for (unsigned img = empty; img<last_block; ++img) {
+//     setBlockAt(1,img+1, rblock_t(img));
+//   }
 
   curXPos = curYPos = board_size/2;
   
   setBlockAt(curXPos, curYPos, mouse);
+
+  unsigned cpx;
+  unsigned cpy;
+
+  do {
+    cpx = std::rand()%board_size;
+    cpy = std::rand()%board_size;
+  } while (blockAt(cpx, cpy) != empty);
+
+  setBlockAt(cpx, cpy, cat);
+  the_cats.push_back(std::make_pair(cpx, cpy));
+  
 }
 
 /*!
@@ -203,5 +249,32 @@ void Rodent::genLevel() {
   handles stuff like advancing the score.
 */
 bool Rodent::update() {
-  return false;
+  cat_list::iterator iter;
+  for (iter = the_cats.begin();
+       iter != the_cats.end();
+       ++iter) {
+    switch (moveCat(iter->first, iter->second)) {
+    case frozen:
+      setBlockAt(iter->first, iter->second, frozen_cat);
+      break;
+    case killed_mouse:
+      std::cout << "Game over!\n";
+      return false;
+      break;
+    case cat_moved:
+      setBlockAt(iter->first, iter->second, cat);
+      break;
+    default:
+      std::cout << "I dunno! lol\n";
+    }
+  }
+  return true;
+}
+
+changed_list::iterator Rodent::changedBegin() {
+  return recent_changes.begin();
+}
+
+changed_list::iterator Rodent::changedEnd() {
+  return recent_changes.end();
 }

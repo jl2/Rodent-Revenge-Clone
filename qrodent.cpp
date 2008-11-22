@@ -21,47 +21,78 @@
 
 #include <QPainter>
 
+
 #include "qrodent.h"
 #include <algorithm>
+#include <iostream>
+
 
 /*!
   Empty constructor just calls super class' constructor.
 */
-QRodent::QRodent(QWidget *parent) : QWidget(parent) {
+QRodent::QRodent(QWidget *parent) : QWidget(parent),
+				    gameStarted(false),
+				    gameSpeed(20),
+				    timerId(startTimer(gameSpeed*20)),
+				    redrawAll(true) {
+  setAutoFillBackground(false);
+  setAttribute(Qt::WA_OpaquePaintEvent);
 }
+void QRodent::timerEvent(QTimerEvent *event) {
+  if (event->timerId() == timerId) {
+    if (gameStarted) {
+      rg.update();
+      update();
+    }
 
+  } else {
+    QWidget::timerEvent(event);
+  }
+}
 /*!
   Update the screen.
 */
-void QRodent::paintEvent(QPaintEvent *event) {
+void QRodent::paintEvent(QPaintEvent *) {
   QPainter painter(this);
-  
-  size_t i, j;
 
-  QRect rpr = event->rect();
-  painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-  painter.fillRect(rpr, QColor(0x21,0xbf,0x46,0xff));
-  
-  unsigned imin = std::min(rpr.x()/bw, rg.width());
-  unsigned imax = std::min((rpr.x()+rpr.width())/bw, rg.width());
-  
-  unsigned jmin = std::min(rpr.y()/bh, rg.height());
-  unsigned jmax = std::min((rpr.y()+rpr.height())/bh, rg.height());
-  
-  painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-
-  rblock_t blk;
-  if (tiles[empty].isNull()) {
-    loadImages();
-  }
-  
-  for (i=imin;i<imax;++i) {
-    for (j=jmin;j<jmax;++j) {
-      blk = rg.blockAt(i,j);
-      if (blk && rg.blockChanged(i,j))
-	painter.drawPixmap(i*bw,j*bh,tiles[blk]);
+  if (redrawAll) {
+    rblock_t blk;
+    if (tiles[empty].isNull()) {
+      loadImages();
     }
+
+    painter.fillRect(0, 0,
+		     size().width(),
+		     size().height(),
+		     QColor(0x21,0xbf,0x46,0xff));
+
+    for (unsigned i=0;i<rg.width();++i) {
+      for (unsigned j = 0; j<rg.height();++j) {
+	blk = rg.blockAt(i,j);
+	painter.drawPixmap(i*bw,
+			   j*bh,
+			   tiles[blk]);
+      }
+    }
+  } else {
+    changed_list::iterator iter;
+    rblock_t blk;
+    for (iter = rg.changedBegin();
+	 iter != rg.changedEnd();
+	 ++iter) {
+
+      painter.fillRect(iter->first*bw,
+		       iter->second*bh,
+		       bw,bh,
+		       QColor(0x21,0xbf,0x46,0xff));
+      blk = rg.blockAt(iter->first,iter->second);
+      painter.drawPixmap(iter->first*bw,
+			 iter->second*bh,
+			 tiles[blk]);
+    }
+    rg.resetChanged();
   }
+  redrawAll = false;
 }
 
 /*!
@@ -85,6 +116,7 @@ void QRodent::keyReleaseEvent(QKeyEvent *event) {
   }
   int num = 0;
   if (canMove) {
+    gameStarted = true;
     unsigned int xp, yp;
 
     xp = rg.xpos();
@@ -93,7 +125,7 @@ void QRodent::keyReleaseEvent(QKeyEvent *event) {
     num = rg.move(md);
 
     if (num) {
-      update(std::min((xp-num)*bw,xp*bw), std::min((yp-num)*bh,yp*bh), 3*num*bw, 3*num*bh);
+      update();
     }
   }
   
@@ -116,6 +148,7 @@ void QRodent::resizeEvent(QResizeEvent *event) {
   } else {
     resizeImages();
   }
+  redrawAll = true;
 }
 
 /*!
