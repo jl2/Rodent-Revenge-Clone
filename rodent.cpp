@@ -37,6 +37,12 @@ Rodent::Rodent(unsigned level) : board_size(23),
 				     curYPos(board_size/2),
 				     points(0),
 				     livesLeft(2) {
+
+  catsPerLevel = 8;
+  catsRemaining = catsPerLevel;
+  updatesBetweenCats = 100;
+  updatesTillNextCat = updatesBetweenCats;
+
   std::srand(std::time(0));
   genLevel();
 }
@@ -91,8 +97,13 @@ unsigned Rodent::doMove(unsigned x, unsigned y, direction_t dir) {
 
   switch (blockAt(x+xoff,y+yoff)) {
   case movable:
-      retVal += doMove(x+xoff, y+yoff, dir);
+    retVal += doMove(x+xoff, y+yoff, dir);
+    setBlockAt(x+xoff, y+yoff, blockAt(x, y));
+    setBlockAt(x, y, empty);
+    return retVal+1;
   case cheese:
+    points += 100;
+    std::cout << "Score: " << points << "\n";
   case empty:
   case mouse:
     setBlockAt(x+xoff, y+yoff, blockAt(x, y));
@@ -173,7 +184,7 @@ bool Rodent::canMove(unsigned x, unsigned y, direction_t dir) {
   the curBoard array is accessed.
 */
 rblock_t Rodent::blockAt(unsigned x, unsigned y) const {
-  return curBoard[y][x];
+  return curBoard[y*23+x];
 }
 
 /*!
@@ -189,7 +200,7 @@ void Rodent::resetChanged() {
   is modified.
 */
 inline void Rodent::setBlockAt(unsigned x, unsigned y, rblock_t b) {
-  curBoard[y][x] = b;
+  curBoard[y*23+x] = b;
   recent_changes.push_back(std::make_pair(x,y));
 }
 
@@ -198,6 +209,7 @@ inline void Rodent::setBlockAt(unsigned x, unsigned y, rblock_t b) {
   TODO: Generate an actual level, not a "test" level.
 */
 void Rodent::genLevel() {
+  std::cout << "Going to level " << cur_level << "\n";
   unsigned i = 0;
   unsigned j = 0;
   
@@ -230,17 +242,7 @@ void Rodent::genLevel() {
   
   setBlockAt(curXPos, curYPos, mouse);
 
-  unsigned cpx;
-  unsigned cpy;
-
-  do {
-    cpx = std::rand()%board_size;
-    cpy = std::rand()%board_size;
-  } while (blockAt(cpx, cpy) != empty);
-
-  setBlockAt(cpx, cpy, cat);
-  the_cats.push_back(std::make_pair(cpx, cpy));
-  
+  addCat();
 }
 
 /*!
@@ -249,6 +251,8 @@ void Rodent::genLevel() {
   handles stuff like advancing the score.
 */
 bool Rodent::update() {
+  bool all_frozen = true;
+  
   cat_list::iterator iter;
   for (iter = the_cats.begin();
        iter != the_cats.end();
@@ -259,13 +263,45 @@ bool Rodent::update() {
       break;
     case killed_mouse:
       std::cout << "Game over!\n";
+      all_frozen = false;
       return false;
       break;
     case cat_moved:
       setBlockAt(iter->first, iter->second, cat);
+      all_frozen = false;
       break;
     default:
       std::cout << "I dunno! lol\n";
+    }
+  }
+
+  // All cats frozen, so convert them to cheese.
+  if (all_frozen) {
+    for (iter = the_cats.begin();
+	 iter != the_cats.end();
+	 ++iter) {
+      setBlockAt(iter->first, iter->second, cheese);
+    }
+    catsRemaining -= the_cats.size();
+    the_cats.clear();
+
+    // If there are more cats for this level, add them
+    // Otherwise the level is over, so generate the next level
+    if (catsRemaining) {
+      addCat();
+      updatesTillNextCat = updatesBetweenCats;
+    } else {
+      catsRemaining = catsPerLevel;
+      cur_level++;
+      genLevel();
+    }
+  }
+  // Player is too slow, add a penguin
+  --updatesTillNextCat;
+  if (updatesTillNextCat==0) {
+    updatesTillNextCat = updatesBetweenCats;
+    if (catsRemaining>the_cats.size()) {
+      addCat();
     }
   }
   return true;
@@ -277,4 +313,17 @@ changed_list::iterator Rodent::changedBegin() {
 
 changed_list::iterator Rodent::changedEnd() {
   return recent_changes.end();
+}
+
+void Rodent::addCat() {
+  unsigned cpx;
+  unsigned cpy;
+
+  do {
+    cpx = std::rand()%board_size;
+    cpy = std::rand()%board_size;
+  } while (blockAt(cpx, cpy) != empty);
+
+  setBlockAt(cpx, cpy, cat);
+  the_cats.push_back(std::make_pair(cpx, cpy));
 }

@@ -26,7 +26,7 @@
 #include <list>
 
 enum rblock_t {empty, movable, hole, yarn, cat, mouse, solid, trap, cheese, frozen_cat, last_block};
-  
+
 enum direction_t {north, south, east, west,
 		  nw, ne, sw, se, last_dir};
 enum game_state_t {not_started, game_over};
@@ -83,7 +83,8 @@ class Rodent {
   
   // Generate a level
   void genLevel();
-
+  void addCat();
+  
   // Converts a direction into an x and y offset for movement
   void getOffset(direction_t dir, int &xoff, int &yoff);
 
@@ -91,7 +92,7 @@ class Rodent {
   const unsigned board_size;
 
   // Current board layout
-  rblock_t curBoard[23][23];
+  rblock_t curBoard[23*23];
 
   // Current level
   unsigned cur_level;
@@ -110,6 +111,13 @@ class Rodent {
   cat_list the_cats;
 
   changed_list recent_changes;
+
+  int catsPerLevel;
+
+  int catsRemaining;
+
+  int updatesBetweenCats;
+  int updatesTillNextCat;
 };
 
 #endif

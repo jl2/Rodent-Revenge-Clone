@@ -33,16 +33,18 @@
 QRodent::QRodent(QWidget *parent) : QWidget(parent),
 				    gameStarted(false),
 				    gameSpeed(20),
-				    timerId(startTimer(gameSpeed*20)),
-				    redrawAll(true) {
+				    timerId(startTimer(gameSpeed*50)),
+				    redrawAll(true),
+				    triedResize(0) {
   setAutoFillBackground(false);
   setAttribute(Qt::WA_OpaquePaintEvent);
+  QPixmapCache::setCacheLimit(1024*40);
 }
 void QRodent::timerEvent(QTimerEvent *event) {
   if (event->timerId() == timerId) {
     if (gameStarted) {
       rg.update();
-      update();
+      repaint();
     }
 
   } else {
@@ -54,13 +56,12 @@ void QRodent::timerEvent(QTimerEvent *event) {
 */
 void QRodent::paintEvent(QPaintEvent *) {
   QPainter painter(this);
-
+  QPixmap tmp;
+  
   if (redrawAll) {
     rblock_t blk;
-    if (tiles[empty].isNull()) {
-      loadImages();
-    }
 
+    
     painter.fillRect(0, 0,
 		     size().width(),
 		     size().height(),
@@ -69,9 +70,14 @@ void QRodent::paintEvent(QPaintEvent *) {
     for (unsigned i=0;i<rg.width();++i) {
       for (unsigned j = 0; j<rg.height();++j) {
 	blk = rg.blockAt(i,j);
+	if (!QPixmapCache::find(be_to_str[blk], tmp)) {
+	  QPixmapCache::insert(be_to_str[blk], tiles[blk]);
+	  QPixmapCache::find(be_to_str[blk], tmp);
+	}
+
 	painter.drawPixmap(i*bw,
 			   j*bh,
-			   tiles[blk]);
+			   tmp);
       }
     }
   } else {
@@ -86,9 +92,13 @@ void QRodent::paintEvent(QPaintEvent *) {
 		       bw,bh,
 		       QColor(0x21,0xbf,0x46,0xff));
       blk = rg.blockAt(iter->first,iter->second);
+      if (!QPixmapCache::find(be_to_str[blk], tmp)) {
+	QPixmapCache::insert(be_to_str[blk], tiles[blk]);
+	QPixmapCache::find(be_to_str[blk], tmp);
+      }
       painter.drawPixmap(iter->first*bw,
 			 iter->second*bh,
-			 tiles[blk]);
+			 tmp);
     }
     rg.resetChanged();
   }
@@ -125,7 +135,7 @@ void QRodent::keyReleaseEvent(QKeyEvent *event) {
     num = rg.move(md);
 
     if (num) {
-      update();
+      repaint();
     }
   }
   
@@ -136,18 +146,14 @@ void QRodent::keyReleaseEvent(QKeyEvent *event) {
   Makes sure the window is an even multiple of the block size.
 */
 void QRodent::resizeEvent(QResizeEvent *event) {
-  bh = event->size().height()/rg.height();
-  bw = event->size().width()/rg.width();
+  bh =double(event->size().height())/double(rg.height());
+  bw = double(event->size().width())/double(rg.width());
   
-  if (tiles[empty].isNull()) {
+  if (cached_tiles[empty].isNull()) {
     loadImages();
   }
-  if (event->size().height() != (int)(bh * rg.height()) ||
-      event->size().width() != (int)(bw*rg.width())) {
-    resize(bw*rg.width(), bh*rg.height());
-  } else {
-    resizeImages();
-  }
+  resizeImages();
+  triedResize=0;
   redrawAll = true;
 }
 
@@ -166,20 +172,7 @@ void QRodent::loadImages() {
   cached_tiles[cheese].load(":/images/cheese_block.svg");
   cached_tiles[frozen_cat].load(":/images/frozen_cat_block.svg");
 
-  if ((bw==0) || (bh ==0)) {
-    tiles[empty] = cached_tiles[empty];
-    tiles[movable] = cached_tiles[movable];
-    tiles[hole] = cached_tiles[hole];
-    tiles[yarn] = cached_tiles[yarn];
-    tiles[cat] = cached_tiles[cat];
-    tiles[mouse] = cached_tiles[mouse];
-    tiles[solid] = cached_tiles[solid];
-    tiles[trap] = cached_tiles[trap];
-    tiles[cheese] = cached_tiles[cheese];
-    tiles[frozen_cat] = cached_tiles[frozen_cat];
-  } else {
-    resizeImages();
-  }
+  resizeImages();
 }
 
 /*!
@@ -187,6 +180,8 @@ void QRodent::loadImages() {
 */
 void QRodent::resizeImages() {
   for (unsigned img = empty; img<last_block; ++img) {
-    tiles[img]=cached_tiles[img].scaled(bw,bh,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    QPixmapCache::remove(be_to_str[img]);
+    tiles[img] = cached_tiles[img].scaled(bw,bh,Qt::IgnoreAspectRatio,Qt::SmoothTransformation);
+    QPixmapCache::insert(be_to_str[img], tiles[img]);
   }
 }

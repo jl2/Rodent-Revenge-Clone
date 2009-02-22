@@ -27,6 +27,18 @@
 
 #include "rodent.h"
 
+static const QString be_to_str[] = {QObject::tr("empty"),
+			      QObject::tr("movable"),
+			      QObject::tr("hole"),
+			      QObject::tr("yarn"),
+			      QObject::tr("cat"),
+			      QObject::tr("mouse"),
+			      QObject::tr("solid"),
+			      QObject::tr("QObject::trap"),
+			      QObject::tr("cheese"),
+			      QObject::tr("frozen_cat"),
+			      QObject::tr("last_block")}; 
+
 class QRodent : public QWidget {
   Q_OBJECT;
 
@@ -56,13 +68,14 @@ class QRodent : public QWidget {
   Rodent rg;
 
   // Width and height of tiles
-  unsigned bw;
-  unsigned bh;
+  double bw;
+  double bh;
   bool gameStarted;
 
   unsigned gameSpeed;
   int timerId;
   bool redrawAll;
+  int triedResize;
 };
 
 #endif
